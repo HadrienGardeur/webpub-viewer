@@ -4,7 +4,7 @@
 
   if (navigator.serviceWorker) {
     //Basic SW
-    navigator.serviceWorker.register('/webpub-manifest/sw.js');
+    navigator.serviceWorker.register('sw.js');
   
     navigator.serviceWorker.ready.then(function() {
       console.log('SW ready');
