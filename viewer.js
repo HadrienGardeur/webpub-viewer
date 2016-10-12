@@ -42,7 +42,7 @@
     if (next.hasAttribute("href")) {
       iframe.src = next.href;
       iframe.style.height = document.body.scrollHeight - 5 + 'px';
-      history.pushState(null, null, "./?manifest=true&href="+manifest_url+"&document="+next.href);
+      //history.pushState(null, null, "./?manifest=true&href="+manifest_url+"&document="+next.href);
       updateNavigation(manifest_url).catch(function() {});
     };
     event.preventDefault();
@@ -52,7 +52,7 @@
     if ( previous.hasAttribute("href")) {
       iframe.src = previous.href;
       iframe.style.height = document.body.scrollHeight - 5 + 'px';
-      history.pushState(null, null, "./?manifest=true&href="+manifest_url+"&document="+previous.href);
+      //history.pushState(null, null, "./?manifest=true&href="+manifest_url+"&document="+previous.href);
       updateNavigation(manifest_url).catch(function() {});
     };
     event.preventDefault();
@@ -116,7 +116,9 @@
       var iframe = document.querySelector("iframe");
       var start_url = new URL(spine[0].href, url).href;
       console.log("Set iframe to: "+start_url)
+      iframe.style.marginTop = navigation.scrollHeight + 'px';
       iframe.src = start_url;
+      iframe.style.height = document.body.scrollHeight - 5 + 'px';
       
       var start = document.querySelector("a[rel=start]");
       var next = document.querySelector("a[rel=next]");
@@ -126,6 +128,7 @@
       start.href = start_url; 
       start.addEventListener("click", function(event) {
         iframe.src = start.href;
+        iframe.style.height = document.body.scrollHeight - 5 + 'px';
         next.href = new URL(spine[1].href, url).href;
         previous.removeAttribute("href");
         history.pushState(null, null, "./?manifest=true&href="+url+"&document="+start.href);

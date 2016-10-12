@@ -4,8 +4,8 @@ This project is a proof of concept for handling Web Publications and the [Web Pu
 
 The viewer is a simple Web App that does the following things:
 
-- display the publication in a sandboxed iframe
-- cache the resources in a Web Publication Manifest for offline viewing and serve them with a Service Worker
+- display the publication in an iframe
+- cache the resources listed in a Web Publication Manifest for offline viewing and serve them with a Service Worker
 - provide the ability to navigate between resources in the publication
 
 For the progressive enhancements use case, check [Web Publication JS](https://github.com/HadrienGardeur/webpub-js).
@@ -23,6 +23,6 @@ Check the live demo for an example.
 
 ##Live Demo
 
-A live demo of the viewer is available at: https://hadriengardeur.github.io/webpub-manifest/examples/iframe
+A live demo of the viewer is available at: https://hadriengardeur.github.io/webpub-manifest/examples/viewer
 
-To display another example, you can also use query parameters for example: https://hadriengardeur.github.io/webpub-manifest/examples/iframe/?manifest=true&href=https://hadriengardeur.github.io/webpub-manifest/examples/comics/manifest.json
+To display another example, you can also use query parameters for example: https://hadriengardeur.github.io/webpub-manifest/examples/viewer/?manifest=true&href=https://hadriengardeur.github.io/webpub-manifest/examples/comics/manifest.json
