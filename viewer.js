@@ -32,6 +32,7 @@
   var next = document.querySelector("a[rel=next]");
   var previous = document.querySelector("a[rel=prev]");
   var navigation = document.querySelector("div[class=controls]");
+  var start = document.querySelector("a[rel=start]");
 
   if (navigator.serviceWorker) verifyAndCacheManifest(manifest_url).catch(function() {});
   initializeNavigation(manifest_url, document_url).catch(function() {});
@@ -125,7 +126,9 @@
       document.querySelector("title").textContent = title;
 
       //Search for TOC and add it
-      var all_resources = json.spine.concat(json.resources)
+      
+      if (json.resources) { var all_resources = json.spine.concat(json.resources); }
+      else { var all_resources = json.spine; }
       all_resources.forEach(function(link) {
         if (link.rel) {
           if (link.rel=="contents") {
@@ -149,8 +152,7 @@
       return json.spine;
     }).then(function(spine) {
       
-      //Find iframe and set start document
-      var iframe = document.querySelector("iframe");
+      //Set start document
       var start_url = new URL(spine[0].href, url).href;
       if (document_url) {
         console.log("Set iframe to: "+document_url)
@@ -159,11 +161,6 @@
         console.log("Set iframe to: "+start_url)
         iframe.src = start_url;
       }
-
-      var start = document.querySelector("a[rel=start]");
-      var next = document.querySelector("a[rel=next]");
-      var previous = document.querySelector("a[rel=prev]");
-      var navigation = document.querySelector("div[class=controls]");
 
       //Set start action
       start.href = start_url; 
@@ -178,10 +175,7 @@
 
   function updateNavigation(url) {
     console.log("Getting "+url)
-    return getManifest(url).then(function(json) { return json.spine} ).then(function(spine) {
-      var iframe = document.querySelector("iframe");
-      var start = document.querySelector("a[rel=start]");
-      var next = document.querySelector("a[rel=next]");
+    return getManifest(url).then(function(json) { return json.spine } ).then(function(spine) {
       
       var current_location = iframe.src;
 
