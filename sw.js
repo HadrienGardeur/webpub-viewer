@@ -20,16 +20,26 @@ self.addEventListener('activate', event => {
   clients.claim();
 });
 
-/*
-For a publication, it seems better to do network then cache than the opposite.
-Could be problematic when the network is very slow, but has the benefit of being fresh.
-*/
-
+//This implements a network or cache strategy.
+//It's a good balance between freshness and speed.
 self.addEventListener('fetch', event => {
-  event.respondWith(
-    fetch(event.request).catch(function() {
-      return caches.match(event.request);
-    })
-  );
+  event.respondWith(fromNetwork(event.request, 400).catch(function () {
+    return caches.match(event.request);
+  }));
 
 });
+
+// Time limited network request. If the network fails or the response is not
+// served before timeout, the promise is rejected.
+function fromNetwork(request, timeout) {
+  return new Promise(function (fulfill, reject) {
+    // Reject in case of timeout.
+    var timeoutId = setTimeout(reject, timeout);
+    // Fulfill in case of success.
+    fetch(request).then(function (response) {
+      clearTimeout(timeoutId);
+      fulfill(response);
+    // Reject also if network fetch rejects.
+    }, reject);
+  });
+}
