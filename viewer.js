@@ -27,14 +27,14 @@
   } else {
     var document_url = undefined;
   };
-
-  if (navigator.serviceWorker) verifyAndCacheManifest(manifest_url).catch(function() {});
-  initializeNavigation(manifest_url, document_url).catch(function() {});
   
   var iframe = document.querySelector("iframe");
   var next = document.querySelector("a[rel=next]");
   var previous = document.querySelector("a[rel=prev]");
   var navigation = document.querySelector("div[class=controls]");
+
+  if (navigator.serviceWorker) verifyAndCacheManifest(manifest_url).catch(function() {});
+  initializeNavigation(manifest_url, document_url).catch(function() {});
 
   iframe.style.height = window.innerHeight - navigation.scrollHeight - 5 + 'px';
   iframe.style.marginTop = navigation.scrollHeight + 'px';
@@ -71,7 +71,9 @@
   });
 
   function getManifest(url) {
-    return fetch(url).then(function(response) {
+    return fetch(url).catch(function() {
+      return caches.match(url);
+    }).then(function(response) {
       return response.json();
     })
   };
@@ -121,6 +123,29 @@
       var title = json.metadata.title;
       console.log("Title of the publication: "+title);
       document.querySelector("title").textContent = title;
+
+      //Search for TOC and add it
+      var all_resources = json.spine.concat(json.resources)
+      all_resources.forEach(function(link) {
+        if (link.rel) {
+          if (link.rel=="contents") {
+            console.log("Found TOC: "+link.href);
+            var toc = document.createElement("a");
+            var links = document.getElementById("links");
+            toc.href = new URL(link.href, url).href;
+            toc.rel = "contents";
+            toc.textContent = "Contents";
+            links.appendChild( document.createTextNode( '\u00A0' ) );
+            links.appendChild(toc);
+            toc.addEventListener("click", function(event) {
+              iframe.src = toc.href;
+              iframe.style.height = window.innerHeight - navigation.scrollHeight - 5 + 'px';
+              event.preventDefault();
+            });
+          }
+        }
+      }, this);
+      
       return json.spine;
     }).then(function(spine) {
       
@@ -145,8 +170,6 @@
       start.addEventListener("click", function(event) {
         iframe.src = start.href;
         iframe.style.height = window.innerHeight - navigation.scrollHeight - 5 + 'px';
-        next.href = new URL(spine[1].href, url).href;
-        previous.removeAttribute("href");
         event.preventDefault();
       });
 
