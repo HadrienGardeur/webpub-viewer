@@ -10,7 +10,7 @@ The viewer is a simple Web App that does the following things:
 
 For the progressive enhancements use case, check [Web Publication JS](https://github.com/HadrienGardeur/webpub-js).
 
-##Usage
+## Usage
 
 By default the viewer will use the following Web Publication Manifest: https://hadriengardeur.github.io/webpub-manifest/examples/MobyDick/manifest.json
 
@@ -21,7 +21,7 @@ To override this behavior, use the following query parameters:
 
 Check the live demo for an example.
 
-##Live Demo
+## Live Demo
 
 A live demo of the viewer is available at: https://hadriengardeur.github.io/webpub-manifest/examples/viewer
 
